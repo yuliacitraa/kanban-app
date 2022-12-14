@@ -11,7 +11,6 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
-	"os"
 	"sync"
 
 	_ "github.com/lib/pq"
@@ -35,13 +34,13 @@ type ClientHandler struct {
 var Resources embed.FS
 
 func FlyURL() string {
-	// return ""
-	return "https://yuliacitra-final-project-be2953868.fly.dev" // TODO: replace this
+	return ""
+	// return "https://yuliacitra-final-project-be2953868.fly.dev" // TODO: replace this
 }
 
 func main() {
 	//TODO: hapus jika sudah di deploy di fly.io
-	os.Setenv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/kanban-app")
+	// os.Setenv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/kanban-app")
 
 	wg := sync.WaitGroup{}
 
