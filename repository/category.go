@@ -59,7 +59,7 @@ func (r *categoryRepository) GetCategoryByID(ctx context.Context, id int) (entit
 }
 
 func (r *categoryRepository) UpdateCategory(ctx context.Context, category *entity.Category) error {
-	err := r.db.WithContext(ctx).Model(&entity.Category{}).Where(category).Updates(&category).Error
+	err := r.db.WithContext(ctx).Model(&entity.Category{}).Updates(&category).Error
 	if err != nil {
 		return err
 	}

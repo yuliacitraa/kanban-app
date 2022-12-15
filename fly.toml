@@ -1,4 +1,4 @@
-# fly.toml file generated for yuliacitra-final-project-be2953868 on 2022-12-14T13:39:17+07:00
+# fly.toml file generated for yuliacitra-final-project-be2953868 on 2022-12-15T13:58:56+07:00
 
 app = "yuliacitra-final-project-be2953868"
 kill_signal = "SIGINT"

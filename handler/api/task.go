@@ -4,6 +4,7 @@ import (
 	"a21hc3NpZ25tZW50/entity"
 	"a21hc3NpZ25tZW50/service"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -93,9 +94,11 @@ func (t *taskAPI) CreateNewTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	addTask := entity.Task{
+		ID:          task.ID,
 		Title:       task.Title,
 		Description: task.Description,
 		CategoryID:  task.CategoryID,
+		UserID:      idInt,
 	}
 
 	added, err := t.taskService.StoreTask(r.Context(), &addTask)
@@ -165,6 +168,12 @@ func (t *taskAPI) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: answer here
 
+	if task.Title== "" || task.Description == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(entity.NewErrorResponse("register data is empty"))
+		return
+	}
+
 	id := r.Context().Value("id")
 	idInt, _ := strconv.Atoi(id.(string))
 
@@ -174,14 +183,26 @@ func (t *taskAPI) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	taskID := r.URL.Query().Get("task_id")
+	taskIdInt, _ := strconv.Atoi(taskID)
+
+	if taskID == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(entity.NewErrorResponse("invalid task id"))
+		return
+	}
+
 	updateTask := entity.Task{
+		ID:          taskIdInt,
 		Title:       task.Title,
 		Description: task.Description,
 		CategoryID:  task.CategoryID,
+		UserID: 	 idInt,	
 	}
 
 	updated, err := t.taskService.UpdateTask(r.Context(), &updateTask)
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(entity.NewErrorResponse("error internal server"))
 		return
@@ -189,7 +210,7 @@ func (t *taskAPI) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"user_id": idInt,
+		"user_id": updated.UserID,
 		"task_id": updated.ID,
     	"message": "success update task",
 	})

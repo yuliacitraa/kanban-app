@@ -26,7 +26,7 @@ func NewTaskRepository(db *gorm.DB) TaskRepository {
 
 func (r *taskRepository) GetTasks(ctx context.Context, id int) ([]entity.Task, error) {
 	task := []entity.Task{}
-	err := r.db.WithContext(ctx).Where("user_id = ", id).Find(&task).Error
+	err := r.db.WithContext(ctx).Where("user_id = ?", id).Find(&task).Error
 	if err != nil {
 		return []entity.Task{}, err
 	}
@@ -60,7 +60,7 @@ func (r *taskRepository) GetTasksByCategoryID(ctx context.Context, catId int) ([
 }
 
 func (r *taskRepository) UpdateTask(ctx context.Context, task *entity.Task) error {
-	err := r.db.WithContext(ctx).Model(&entity.Task{}).Where(task).Updates(&task).Error
+	err := r.db.WithContext(ctx).Model(&entity.Task{}).Where("id = ? ", task.ID).Updates(&task).Error
 	if err != nil {
 		return err
 	}
